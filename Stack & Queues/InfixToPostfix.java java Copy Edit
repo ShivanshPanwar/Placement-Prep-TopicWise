@@ -1,0 +1,57 @@
+// GFG Problem: Infix to Postfix Conversion
+// Converts an infix expression to its equivalent postfix form
+
+import java.util.Stack;
+
+class Solution {
+    // Function to convert infix expression to postfix
+    public static String infixToPostfix(String s) {
+        StringBuilder result = new StringBuilder();  // To store postfix expression
+        Stack<Character> stack = new Stack<>();      // Stack for operators
+
+        for (char ch : s.toCharArray()) {
+            if (Character.isLetterOrDigit(ch)) {
+                // If operand, add to result
+                result.append(ch);
+            } else if (ch == '(') {
+                // Push '(' to stack
+                stack.push(ch);
+            } else if (ch == ')') {
+                // Pop until '(' is encountered
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    result.append(stack.pop());
+                }
+                stack.pop();  // Remove '(' from stack
+            } else {
+                // Operator encountered
+                while (!stack.isEmpty() && precedence(ch) <= precedence(stack.peek())) {
+                    result.append(stack.pop());
+                }
+                stack.push(ch);  // Push current operator
+            }
+        }
+
+        // Pop all remaining operators
+        while (!stack.isEmpty()) {
+            result.append(stack.pop());
+        }
+
+        return result.toString();
+    }
+
+    // Helper function to return precedence of operators
+    public static int precedence(char operator) {
+        switch (operator) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            case '^':
+                return 3;
+            default:
+                return 0;
+        }
+    }
+}
