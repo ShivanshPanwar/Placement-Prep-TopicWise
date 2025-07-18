@@ -1,0 +1,43 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Permutations {
+
+    /**
+     * Generates all possible permutations of the given integer array.
+     * 
+     * @param nums Array of integers to permute
+     * @return A list of all possible permutations
+     */
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> bigList = new ArrayList<>(); // Stores all permutations
+        List<Integer> smallList = new ArrayList<>(); // Builds a single permutation
+        helper(nums, bigList, smallList);
+        return bigList;
+    }
+
+    /**
+     * Backtracking helper method to build permutations recursively.
+     * 
+     * @param nums      Original array of numbers
+     * @param bigList   Master list that stores all complete permutations
+     * @param smallList Current permutation being built
+     */
+    private void helper(int[] nums, List<List<Integer>> bigList, List<Integer> smallList) {
+        // Base case: if current permutation is complete
+        if (smallList.size() == nums.length) {
+            bigList.add(new ArrayList<>(smallList)); // Add a deep copy
+            return;
+        }
+
+        // Explore all choices for the current position
+        for (int num : nums) {
+            if (!smallList.contains(num)) { // Skip if already used
+                smallList.add(num); // Choose
+                helper(nums, bigList, smallList); // Explore
+                smallList.remove(smallList.size() - 1); // Backtrack
+            }
+        }
+    }
+
+}
