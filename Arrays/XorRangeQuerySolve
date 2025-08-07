@@ -1,0 +1,48 @@
+class XorRangeQuerySolver {
+    /**
+     * Solves range XOR queries on an input array using a prefix XOR approach.
+     *
+     * @param arr     The input array of positive integers.
+     * @param queries Each query is a 2-element array [left, right] representing the range.
+     * @return        An array of XOR results for each query.
+     *
+     * Time Complexity:
+     * - O(n) for prefix computation
+     * - O(m) for processing m queries
+     * - Total: O(n + m)
+     *
+     * Space Complexity:
+     * - O(n) for prefix XOR array
+     * - O(m) for result array
+     */
+    public int[] xorQueries(int[] arr, int[][] queries) {
+        int n = arr.length;
+        int[] prefix = new int[n];              // prefix[i] stores XOR of arr[0] to arr[i]
+        int[] answer = new int[queries.length]; // answer array for storing results
+
+        // Initialize prefix[0] with first element of arr
+        prefix[0] = arr[0];
+
+        // Build prefix XOR array in O(n)
+        for (int i = 1; i < n; i++) {
+            prefix[i] = prefix[i - 1] ^ arr[i];
+        }
+
+        // Process each query in O(1)
+        int index = 0;
+        for (int[] q : queries) {
+            int left = q[0];
+            int right = q[1];
+
+            // If the range starts at 0, just return prefix[right]
+            if (left == 0) {
+                answer[index++] = prefix[right];
+            } else {
+                // XOR from arr[left] to arr[right] = prefix[right] ^ prefix[left - 1]
+                answer[index++] = prefix[right] ^ prefix[left - 1];
+            }
+        }
+
+        return answer;
+    }
+}
